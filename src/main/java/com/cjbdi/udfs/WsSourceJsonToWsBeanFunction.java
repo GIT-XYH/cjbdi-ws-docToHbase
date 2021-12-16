@@ -31,7 +31,7 @@ public class WsSourceJsonToWsBeanFunction extends ProcessFunction<String, WsBean
     }
 
     @Override
-    public void open(Configuration parameters) throws Exception {
+    public void open(Configuration parameters){
         ParameterTool globalJobParameters = (ParameterTool) getRuntimeContext().getExecutionConfig().getGlobalJobParameters();
         flag = globalJobParameters.getBoolean("execution-time-flag", false);
         startTime = globalJobParameters.getInt("execution-time-start", 0);
@@ -46,7 +46,6 @@ public class WsSourceJsonToWsBeanFunction extends ProcessFunction<String, WsBean
 
     @Override
     public void processElement(String s, Context context, Collector<WsBeanFromKafka> collector) throws Exception {
-
 //        if (flag) {
 //            int hour;
 //            Calendar calendar = Calendar.getInstance();
@@ -58,7 +57,6 @@ public class WsSourceJsonToWsBeanFunction extends ProcessFunction<String, WsBean
 //                hour = calendar.get(Calendar.HOUR_OF_DAY);
 //            }
 //        }
-
         try {
             WsBeanFromKafka wsBeanFromKafka = JSON.parseObject(s, WsBeanFromKafka.class);
             collector.collect(wsBeanFromKafka);

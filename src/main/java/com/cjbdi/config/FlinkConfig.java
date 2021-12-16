@@ -1,5 +1,6 @@
 package com.cjbdi.config;
 
+import com.cjbdi.udfs.HbaseSink;
 import org.apache.flink.api.common.restartstrategy.RestartStrategies;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.common.time.Time;
@@ -12,6 +13,7 @@ import org.apache.flink.runtime.state.hashmap.HashMapStateBackend;
 import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.environment.CheckpointConfig;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 import org.apache.flink.util.OutputTag;
 import org.apache.kafka.clients.consumer.OffsetResetStrategy;
 
@@ -33,8 +35,6 @@ public class FlinkConfig {
     // TODO: 2021/12/3 定义各种失败标签, 做侧流输出
     //jsonToBean失败标签
     public static OutputTag<String> jsonErrorData = new OutputTag<String>("json-error-data") {};
-    //主进程解析失败标签
-    public static OutputTag<String> analysisError = new OutputTag<String>("jobs-error") {};
     //最终结果写入topic失败标签
     public static OutputTag<String> writeErrorData = new OutputTag<String>("toKafka-error") {};
 
@@ -67,7 +67,7 @@ public class FlinkConfig {
                 .build();
 
         jsonErrorSink = KafkaSink.<String>builder()
-                .setBootstrapServers(KafkaConfig.brokers)
+                .setBootstrapServers(KafkaConfig.brokers2)
                 .setRecordSerializer(KafkaRecordSerializationSchema.builder()
                         .setTopic(jsonErrorTopic)
                         .setValueSerializationSchema(new SimpleStringSchema())

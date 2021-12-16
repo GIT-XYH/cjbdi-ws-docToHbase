@@ -12,12 +12,10 @@ import java.util.Properties;
 public class KafkaConfig {
 
     public static String brokers;
+    public static String brokers2;
     public static String groupId;
     public static String inputTopic;
-    public static String outputTopic;
     public static String jsonErrorTopic;
-    public static String analysisErrorTopic;
-    public static String toKafkaErrorTopic;
 
     public static void KafkaEnv(ParameterTool parameterTool) {
         //配置kafka参数设置
@@ -30,11 +28,9 @@ public class KafkaConfig {
 
         //指定 kafka topic 等相关参数
         brokers = parameterTool.getRequired("bootstrap-servers");
+        brokers2 = parameterTool.getRequired("bootstrap-servers2");
         inputTopic = parameterTool.getRequired("input-topic");
         groupId = parameterTool.getRequired("input-group-id");
         jsonErrorTopic = parameterTool.getRequired("json-error-topic");
-        analysisErrorTopic = parameterTool.getRequired("analysis-error-topic");
-        outputTopic = parameterTool.getRequired("output-topic");
-        toKafkaErrorTopic = parameterTool.getRequired("toKafka-error-topic");
     }
 }

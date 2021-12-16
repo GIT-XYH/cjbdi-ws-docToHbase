@@ -5,8 +5,10 @@ import com.cjbdi.bean.WsBean;
 import com.cjbdi.bean.WsBeanFromKafka;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.util.Collector;
+import org.apache.flink.util.FileUtils;
 import org.apache.flink.util.OutputTag;
 
+import java.io.File;
 import java.util.Base64;
 
 /**
@@ -24,11 +26,13 @@ public class WsToHbaseProcessFunction extends ProcessFunction<WsBeanFromKafka, b
         /**
          * 先将 base64格式的文本转成二进制的文本
          */
+        WsBean wsBean = wsBeanFromKafka.getWsBean();
+        String base64File = wsBeanFromKafka.getBase64File();
         try {
-            WsBean wsBean = wsBeanFromKafka.getWsBean();
-            String base64File = wsBeanFromKafka.getBase64File();
             //wsDoc 就是二进制格式的文书原文件
             byte[] wsDoc = Base64.getDecoder().decode(base64File);
+//            org.apache.commons.io.FileUtils.writeByteArrayToFile(new File("/Users/xuyuanhang/Desktop/code/cjbdi-ws-docToHbase/data/ws.doc"), wsDoc);
+            out.collect(wsDoc);
         } catch (Exception e) {
             e.printStackTrace();
             ctx.output(writeErrorData, JSON.toJSONString(wsBeanFromKafka));
